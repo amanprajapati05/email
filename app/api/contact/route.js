@@ -21,8 +21,8 @@ export async function POST(request) {
       port: 587,
       secure: false,
       auth: {
-        user: process.env.EMAIL_ID,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.EMAIL_ID, // your outlook email
+        pass: process.env.EMAIL_PASSWORD // your outlook password
       },
       tls: {
         ciphers: 'SSLv3',
@@ -30,14 +30,12 @@ export async function POST(request) {
       }
     });
 
-
     await transporter.sendMail({
-      from: email,
+      from: process.env.EMAIL_ID,
       to: process.env.EMAIL_ID,
       subject: `New Message from ${name}`,
       html: `
         <div>
-          <h2>New Contact Form Submission</h2>
           <p><strong>Subject:</strong> ${subject}</p>
           <p><strong>From:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
@@ -45,6 +43,7 @@ export async function POST(request) {
           <p>${message}</p>
         </div>
       `,
+      replyTo: email,
     });
 
     return new NextResponse(JSON.stringify({ message: "Message sent successfully" }), {
@@ -56,7 +55,7 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error('Error sending email:', error);
-    return new NextResponse(JSON.stringify({ message: "Failed to send message" }), {
+    return new NextResponse(JSON.stringify({ message: "Failed to send message", error: error.message }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
