@@ -17,15 +17,19 @@ export async function POST(request) {
     const { name, email, subject, message } = await request.json();
 
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+      host: "smtp.office365.com",
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.EMAIL_ID,
         pass: process.env.EMAIL_PASS,
       },
+      tls: {
+        ciphers: 'SSLv3',
+        rejectUnauthorized: false
+      }
     });
-    
+
 
     await transporter.sendMail({
       from: email,
