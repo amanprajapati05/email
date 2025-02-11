@@ -25,6 +25,7 @@ export async function POST(request) {
         pass: process.env.EMAIL_PASS,
       },
     });
+    
 
     await transporter.sendMail({
       from: email,
